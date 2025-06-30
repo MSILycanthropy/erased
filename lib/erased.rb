@@ -1,6 +1,9 @@
 require "erased/version"
 require "erased/railtie"
+require "erased/registry"
+require "erased/block"
+require "erased/document"
 
 module Erased
-  # Your code goes here...
+  class Error < StandardError; end
 end
