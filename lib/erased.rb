@@ -1,5 +1,5 @@
 require "erased/version"
-require "erased/railtie"
+require "erased/engine"
 require "erased/registry"
 require "erased/block"
 require "erased/document"
