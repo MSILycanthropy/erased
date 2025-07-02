@@ -3,21 +3,26 @@
 module Erased
   class Registry
     class << self
-      def register(name, block_class)
-        return if blocks[name.to_sym].present?
+      def register(block_classes)
+        block_classes = Array.wrap(block_classes)
 
-        raise Error, "`block_class` must include `Erased::Block`" unless block_class.include?(Erased::Block)
+        block_classes.each do |block_class|
+          name = block_class.block_name
+          next if blocks[name.to_sym].present?
 
-        blocks[name.to_sym] = block_class
+          raise Error, "`block_class` must include `Erased::Block`" unless block_class.include?(Erased::Block)
+
+          blocks[name.to_sym] = block_class
+        end
       end
 
       def lookup_and_instantiate_from(json)
         json = json.with_indifferent_access
-        maybe_block = find_or_register_block(json["block"])
+        maybe_block = find_block(json["block"])
 
         return if maybe_block.nil?
 
-        maybe_block.send(:parse, json["attributes"])
+        maybe_block.send(:parse, json)
       end
 
       def blocks
@@ -26,11 +31,8 @@ module Erased
 
       private
 
-      def find_or_register_block(block_name)
-        return blocks[block_name] if blocks[block_name].present?
-
-        block_class = "#{block_name}_block".classify.constantize
-        block_class
+      def find_block(block_name)
+        blocks[block_name]
       end
     end
   end

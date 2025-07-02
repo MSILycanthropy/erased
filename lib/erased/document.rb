@@ -11,7 +11,11 @@ module Erased
     # TODO: This is probably not _exactly_ how we wanna do this. We probably,
     # want some toggle for doing email
     def render_in(view_context)
-      view_context.safe_join(blocks.map { |b| b.render_in(view_context) })
+      view_context.safe_join(blocks.map do |block|
+        view_context.tag.div data: { 'erased-block': "" } do
+          block.render_in(view_context)
+        end
+      end)
     end
 
     class << self
