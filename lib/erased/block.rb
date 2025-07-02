@@ -53,7 +53,8 @@ module Erased
       end
     end
 
-    attr_accessor :child_document
+    attr_accessor :child_document, :id
+    attr_reader :attributes
 
     def initialize
       @attributes = {}
@@ -98,6 +99,8 @@ module Erased
         if @has_children
           instance.child_document = Document.parse(json[:children])
         end
+
+        instance.id = json[:id] || SecureRandom.hex(8)
 
         instance
       end

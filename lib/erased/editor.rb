@@ -24,8 +24,14 @@ module Erased
         end.to_json.html_safe
       end
 
+      current_blocks_script = view_context.tag.script id: "erased-editor-blocks", type: "application/json" do
+        document.flat_blocks.to_h do |block|
+          [ block.id, block.attributes ]
+        end.to_json.html_safe
+      end
+
       view_context.tag.div class: "erased-editor" do
-        view_context.safe_join([ templates, attributes_script, view_context.render(document) ])
+        view_context.safe_join([ templates, current_blocks_script, attributes_script, view_context.render(document) ])
       end
     end
   end

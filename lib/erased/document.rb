@@ -12,11 +12,23 @@ module Erased
     # want some toggle for doing email
     def render_in(view_context)
       view_context.safe_join(blocks.map do |block|
-        view_context.tag.div data: { 'erased-block': "" } do
+        view_context.tag.div data: { 'erased-block': block.id, 'erased-block-name': block.class.block_name } do
           block.render_in(view_context)
         end
       end)
     end
+
+    def flat_blocks
+      blocks.flat_map do |block|
+        if block.child_document.present?
+          [ block, *block.child_document.flat_blocks ]
+        else
+          [ block ]
+        end
+      end
+    end
+
+    private
 
     class << self
       def parse(array)
