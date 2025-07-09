@@ -3,6 +3,10 @@
 module Erased
   class Registry
     class << self
+      def clear
+        @blocks = nil
+      end
+
       def register(block_classes)
         block_classes = Array.wrap(block_classes)
 

@@ -2,6 +2,8 @@ export class Editor {
   constructor(options = {}) {
     this.element = document.querySelector(".erased-editor");
 
+    this.#setupAdjacencyList();
+    this.#setupCurrentBlockAttributes();
     this.#setupBlockAttributes();
 
     this.element.addEventListener("click", this.clickListener);
@@ -21,9 +23,12 @@ export class Editor {
     if (!block) return;
 
     const type = block.dataset.erasedBlockName;
+    const availableAttributes = this.availableBlockAttributes[type];
+    const id = block.dataset.erasedBlock;
+    const blockAttributes = this.currentBlockAttributes[id];
 
     if (this.onClick) {
-      this.onClick(block, type, this.availableBlockAttributes[type]);
+      this.onClick(block, type, availableAttributes, blockAttributes);
     }
   };
 
@@ -33,5 +38,19 @@ export class Editor {
     );
 
     this.availableBlockAttributes = JSON.parse(attributesScript.textContent);
+  }
+
+  #setupAdjacencyList() {
+    const listScript = this.element.querySelector("#erased-editor-adjacency");
+
+    this.adjacencyList = JSON.parse(listScript.textContent);
+  }
+
+  #setupCurrentBlockAttributes() {
+    const attributesScript = this.element.querySelector(
+      "#erased-editor-blocks"
+    );
+
+    this.currentBlockAttributes = JSON.parse(attributesScript.textContent);
   }
 }

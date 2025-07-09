@@ -77,6 +77,10 @@ module Erased
       )
     end
 
+    def block_name
+      self.class.block_name
+    end
+
     private
 
     def children
@@ -110,7 +114,7 @@ module Erased
 
       def erb_template(source)
         caller = caller_locations(1..1)[0]
-        @template ||= Template.new(source:, path: caller.absolute_path || caller.path, lineno: caller.lineno)
+        @template = Template.new(source:, path: caller.absolute_path || caller.path, lineno: caller.lineno)
       end
 
       def mrml_template(source)
@@ -146,7 +150,7 @@ module Erased
       end
 
       def mock
-        @mock ||= Mock.new(self)
+        @mock = Mock.new(self)
       end
     end
   end
