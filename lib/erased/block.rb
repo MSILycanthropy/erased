@@ -10,6 +10,8 @@ module Erased
       end
 
       def render
+        return block_class.editor_template_source if block_class.editor_template_source.present?
+
         @output_buffer = ActionView::OutputBuffer.new
 
         instance_eval(template)
@@ -110,11 +112,15 @@ module Erased
       end
 
       # DSL
-      attr_reader :template
+      attr_reader :template, :editor_template_source
 
       def erb_template(source)
         caller = caller_locations(1..1)[0]
         @template = Template.new(source:, path: caller.absolute_path || caller.path, lineno: caller.lineno)
+      end
+
+      def editor_template(source)
+        @editor_template_source = source
       end
 
       def mrml_template(source)

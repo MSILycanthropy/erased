@@ -12,7 +12,7 @@ module Erased
     def render_in(view_context)
       templates = view_context.safe_join(available_blocks.map do |ab|
         view_context.tag.template id: "erased-editor-#{ab.block_name.to_s.downcase.dasherize}-block-template" do
-          ab.mock.render
+          ab.mock.render.html_safe
         end
       end)
 
